@@ -36,6 +36,9 @@ function M.show_select(prompt, termcodes)
   end
   vim.schedule(function()
     vim.ui.select(files, { prompt = prompt }, function(_, index)
+      if index == nil then
+        return
+      end
       if index <= 0 then
         index = 1
       end
