@@ -13,11 +13,17 @@ function M.update_spellfiles(config)
   end
 
   -- uri encode
-  config.local_file_path = vim.uri_encode(config.local_file_path)
+  if config.local_file_path then
+    config.local_file_path = vim.uri_encode(config.local_file_path)
+  end
   config.global_file_path = vim.uri_encode(config.global_file_path)
 
   -- set spellfile
-  vim.o.spellfile = config.local_file_path .. "," .. config.global_file_path
+  if config.local_file_path then
+    vim.o.spellfile = config.local_file_path .. "," .. config.global_file_path
+  else
+    vim.o.spellfile = config.global_file_path
+  end
 
   -- set keymaps
   if config.keymaps.replace_default then
@@ -28,7 +34,8 @@ function M.update_spellfiles(config)
   end
 
   if config.notify_on_dir_change then
-    vim.notify("Update spell file: " .. config.local_file_path, vim.log.levels.INFO)
+    local msg = config.local_file_path and ("Update spell file: " .. config.local_file_path) or "Update spell file"
+    vim.notify(msg, vim.log.levels.INFO)
   end
 end
 
